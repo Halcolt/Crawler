@@ -1,0 +1,27 @@
+Băng thông: tốc độ truyền tối đa, 
+thông lượng: tốc độ thực tế
+
+Trể truyền tin: thời gian truyền hết dữ liệu
+Trễ truyền dẫn: thời gian tín hiệu từ nguồn tới đích
+Trễ xử lý tại nút chuyển tiếp
+
+Truyền "Best-effort": Truyền ngay với khả năng tối đa: chỉ truyền 1 lần ko hoàn lại
+
+Thông số đánh giá độ tin cậy đường truyền:
+- Tỉ lệ lỗi bit
+- Tỉ lệ mất gói tin
+
+kiến trúc phân tầng:
+- Tầng dưới cung cấp dịch vụ tầng trên qua điểm truy câp dịch vụ (SAP)
+- Một tầng không cần triển khai trên tất cả nút mạng
+
+-Mỗi tầng có thể có 1 hoặc 1 vài giao thức
+
+PDU(protocol data unit)
+là 1 đơn vị dữ liệu được đóng gói theo giao thức của mỗi tầng trong kiến trúc phân tầng
+
+Điểm truy cập dịch vụ là SAP
+
+khi nhận dc dữ liệu từ tầng trên, tầng dưới THÊM TIÊU ĐỀ CHO GÓI TIN (encapsulation)
+
+

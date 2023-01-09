@@ -1,0 +1,62 @@
+/*
+Cluster some float type data input from a file in python3 . 
+*/
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.datasets.samples_generator import make_blobs
+
+#read data from file
+data = np.genfromtxt('data.txt', delimiter=',')
+
+#plot data
+plt.scatter(data[:,0],data[:,1], marker="o", color='b')
+plt.show()
+
+#cluster data
+kmeans = KMeans(n_clusters=3)
+kmeans.fit(data)
+
+#plot clustered data
+plt.scatter(data[:,0],data[:,1], c=kmeans.labels_, cmap='rainbow')
+plt.show()
+
+-------------------------------------------------------------------------------------------
+
+/*
+Cluster some float type data input from a file then print it out  in python3 . 
+*/
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.datasets.samples_generator import make_blobs
+
+#read data from file
+data = np.genfromtxt('data.txt', delimiter=',')
+
+#print data
+print(data)
+
+#plot data
+plt.scatter(data[:,0],data[:,1], marker="o", s=150, linewidths = 5, zorder=10)
+plt.show()
+
+#cluster data
+kmeans = KMeans(n_clusters=3)
+kmeans.fit(data)
+
+#print cluster centers
+print(kmeans.cluster_centers_)
+
+#print cluster labels
+print(kmeans.labels_)
+
+#plot data with cluster labels
+plt.scatter(data[:,0],data[:,1], c=kmeans.labels_, cmap='rainbow')
+plt.show()
+
+-------------------------------------------------------------------------------------------
