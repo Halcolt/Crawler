@@ -4,9 +4,10 @@ use crawler;
 create table ProType(
 	PType varchar(10),
 	ProviderName varchar(255) ,
+    NumberOfOption int,
 	ProviderEXPyear int,
 	NumberOfLeakCase int,
-	GetAppPoint int,
+	GetAppPoint float,
 	primary key (ProviderName)
 )
 
@@ -20,6 +21,7 @@ create table ProviderDriveOption(
 	GbPerPrice float,
     PricePoint int,
     PeoplePoint int,
+    AveragePoint float,
 	constraint PK_Drive_Op primary key (ProverderOpID),
 	constraint FK_Drive_Op foreign key (ProviderName) references ProType(ProviderName)
 )
@@ -41,13 +43,15 @@ create table ProviderHostOption(
 	constraint FK_Host_Op foreign key (ProviderName) references ProType(ProviderName)
 )
 
-
-select * from protype
+UPDATE ProviderDriveOption SET PeoplePoint=5 WHERE MaxPeople = 1000000
+select * from protype;
 select * from ProviderDriveOption
-SELECT * FROM ProviderDriveOption WHERE GbPerPrice = 0.0465
+-- SELECT * FROM ProviderDriveOption WHERE GbPerPrice = 0.0465
 
 SET SQL_SAFE_UPDATES = 0;
-UPDATE ProviderDriveOption SET PricePoint=2 WHERE ROUND(GbPerPrice, 7) = 0.0465;
+-- UPDATE ProviderDriveOption SET PricePoint=2 WHERE ROUND(GbPerPrice, 7) = 0.0465;
 
 drop table MoreDriveOption
 drop table ProviderDriveOption
+drop table ProviderHostOption
+drop table Protype

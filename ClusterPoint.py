@@ -1,6 +1,7 @@
 import mysql.connector
 from sklearn.cluster import KMeans
 import numpy as np
+import sqlite3
 
 # Connect to the MySQL server
 mydb = mysql.connector.connect(
@@ -24,7 +25,7 @@ mycursor.execute(query)
 prices = [price[0] for price in mycursor.fetchall()]
 
 # Convert data to a NumPy array
-prices = np.sort(prices, axis=0)
+prices = np.sort(prices, axis=0, kind='quicksort')[::-1]
 prices = np.array(prices).reshape(-1, 1)
 
 # Cluster data using KMeans
@@ -49,11 +50,11 @@ for i, (price, label) in enumerate(clustered_data):
     else:
         label = new_label
         clustered_data[i] = (price, label)
-
+'''
 # print the re-labeled data
 for element in clustered_data:
     print(element, end='\n')
-
+'''
     # Iterate through the re-labeled data and update the "PricePoint" field
 for price, label in clustered_data:
     query = "UPDATE ProviderDriveOption SET PricePoint=%s WHERE ROUND(GbPerPrice, 7) = %s"
@@ -71,6 +72,7 @@ peoples = [peoples[0] for peoples in mycursor.fetchall()]
 
 # Convert data to a NumPy array
 peoples = np.sort(peoples, axis=0)
+#peoples = peoples.astype(int)
 peoples = np.array(peoples).reshape(-1, 1)
 
 # Cluster data using KMeans
@@ -95,18 +97,34 @@ for i, (people, label) in enumerate(clustered_data):
     else:
         label = new_label
         clustered_data[i] = (people, label)
-
+'''
 # print the re-labeled data
 for element in clustered_data:
     print(element, end='\n')
-
-    # Iterate through the re-labeled data and update the "peoplePoint" field
+'''
+# Iterate through the re-labeled data and update the "peoplePoint" field
 for people, label in clustered_data:
     query = "UPDATE ProviderDriveOption SET PeoplePoint=%s WHERE MaxPeople = %s"
-    values = (label, people[0])
+    #need to convert into int
+    values = (label, int(people[0]))
     mycursor.execute(query, values)
     mydb.commit()
-    
+
+# Select all non-NULL values from GetAppPoint column
+mycursor.execute("SELECT GetAppPoint FROM ProType WHERE GetAppPoint IS NOT NULL")
+
+# Calculate the average of the selected values
+result = mycursor.fetchall()
+total = sum([row[0] for row in result])
+num_values = len(result)
+average = total / num_values
+
+# Replace all NULL values with the calculated average
+mycursor.execute("UPDATE ProType SET GetAppPoint = %s WHERE GetAppPoint IS NULL", (average,))
+mydb.commit()
+
+#print("Average:", average)
+
 # Close the cursor and connection
 mycursor.close()
 mydb.close()
