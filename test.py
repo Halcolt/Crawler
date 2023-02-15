@@ -1,17 +1,30 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-from time import sleep
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-driver.get("https://www.facebook.com")
+import mysql.connector
 
-txtUser = driver.find_element("email")
-txtUser.send_keys("billtrinh19@gmail.com")
+# Connect to the MySQL server
+mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="Bill1567",
+        database="crawler"
+    )
 
-sleep(5)
+if(mydb):
+    print("Connection Successful\n")
+else:
+    print("Connection Fail")
+    exit()
 
+# Create a cursor object to execute SQL statements
+mycursor = mydb.cursor()
 
+# Use the SELECT DISTINCT statement to retrieve unique values from the MOption column
+mycursor.execute("SELECT DISTINCT MOption FROM MoreHostOption")
 
-#browser.close()
+# Fetch the results using the cursor's fetchall() method
+results = mycursor.fetchall()
 
-#https://www.youtube.com/watch?v=EawbYWaTP_k
+# Iterate through the results and print each MOption value
+print("Here is all the addition option we have in our database:\n")
+for result in results:
+    print("+ ",result[0])
+

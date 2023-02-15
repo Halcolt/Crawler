@@ -19,6 +19,8 @@ else:
 # Create a cursor object
 mycursor = mydb.cursor()
 
+#drive
+#---------------------------------
 # Retrieve the data from the "Price" field
 query = "SELECT GbPerPrice FROM ProviderDriveOption"
 mycursor.execute(query)
@@ -50,11 +52,11 @@ for i, (price, label) in enumerate(clustered_data):
     else:
         label = new_label
         clustered_data[i] = (price, label)
-'''
+
 # print the re-labeled data
 for element in clustered_data:
     print(element, end='\n')
-'''
+
     # Iterate through the re-labeled data and update the "PricePoint" field
 for price, label in clustered_data:
     query = "UPDATE ProviderDriveOption SET PricePoint=%s WHERE ROUND(GbPerPrice, 7) = %s"
@@ -97,11 +99,11 @@ for i, (people, label) in enumerate(clustered_data):
     else:
         label = new_label
         clustered_data[i] = (people, label)
-'''
+
 # print the re-labeled data
 for element in clustered_data:
     print(element, end='\n')
-'''
+
 # Iterate through the re-labeled data and update the "peoplePoint" field
 for people, label in clustered_data:
     query = "UPDATE ProviderDriveOption SET PeoplePoint=%s WHERE MaxPeople = %s"
@@ -123,7 +125,9 @@ average = total / num_values
 mycursor.execute("UPDATE ProType SET GetAppPoint = %s WHERE GetAppPoint IS NULL", (average,))
 mydb.commit()
 
-#print("Average:", average)
+
+mycursor.execute("UPDATE ProviderDriveOption SET AveragePoint = (PricePoint + PeoplePoint)/2")
+mydb.commit()
 
 # Close the cursor and connection
 mycursor.close()
