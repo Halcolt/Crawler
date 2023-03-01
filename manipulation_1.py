@@ -34,7 +34,7 @@ def print_top_five_drive():
             print("+ ",result[0])
         Moreoption = input("Enter the Option you want: ")
         mycursor.execute("""
-        SELECT ProviderDriveOption.ProverderOpID, ProviderDriveOption.ProviderName, ProviderDriveOption.Price, ProviderDriveOption.Capacity, AVG(((PricePoint + PeoplePoint)/2 + GetAppPoint)/2) as average
+        SELECT ProviderDriveOption.ProverderOpID, ProviderDriveOption.ProviderName, ProviderDriveOption.Price, ProviderDriveOption.Capacity, AVG((AveragePoint + GetAppPoint)/2) as average
         FROM ProviderDriveOption
         JOIN ProType ON ProType.ProviderName = ProviderDriveOption.ProviderName
         JOIN MoreDriveOption ON MoreDriveOption.ProverderOpID = ProviderDriveOption.ProverderOpID
@@ -43,7 +43,7 @@ def print_top_five_drive():
         """, (People, Money, Capacity, Moreoption))
     else:
         mycursor.execute("""
-        SELECT ProviderDriveOption.ProverderOpID, ProviderDriveOption.ProviderName, ProviderDriveOption.Price, ProviderDriveOption.Capacity, AVG(((PricePoint + PeoplePoint)/2 + GetAppPoint)/2) as average
+        SELECT ProviderDriveOption.ProverderOpID, ProviderDriveOption.ProviderName, ProviderDriveOption.Price, ProviderDriveOption.Capacity, AVG((AveragePoint + GetAppPoint)/2) as average
         FROM ProviderDriveOption
         JOIN ProType ON ProType.ProviderName = ProviderDriveOption.ProviderName
         JOIN MoreDriveOption ON MoreDriveOption.ProverderOpID = ProviderDriveOption.ProverderOpID
@@ -119,20 +119,20 @@ def print_top_five_host():
             print("+ ",result[0])
         Moreoption = input("Enter the Option you want: ")
         mycursor.execute("""
-        SELECT ProviderHostOption.ProverderOpID, ProviderHostOption.ProviderName, ProviderHostOption.Price, ProviderHostOption.Core, ProviderHostOption.Ram, ProviderHostOption.Bandwidth, ProviderHostOption.Capacity, AVG((AveragePoint + GetAppPoint)/2) as average
+        SELECT ProviderHostOption.ProverderOpID, ProviderHostOption.ProviderName, ProviderHostOption.Price, ProviderHostOption.Core, ProviderHostOption.RAM, ProviderHostOption.Bandwidth,ProviderHostOption.Capacity, AVG((AveragePoint + GetAppPoint)/2) as average
         FROM ProviderHostOption
         JOIN ProType ON ProType.ProviderName = ProviderHostOption.ProviderName
         JOIN MoreHostOption ON MoreHostOption.ProverderOpID = ProviderHostOption.ProverderOpID
-        WHERE Price <= %s AND Core >= %s And Capacity >= %s And Ram >= %s and Bandwidth >= %s and MOption = %s
+        WHERE Price <= %s And RAM >= %s And Bandwidth >= %s And Core >= %s And Capacity >= %s and MOption = %s
         GROUP BY ProviderHostOption.ProverderOpID, ProviderHostOption.ProviderName
         """, (Money, Core, Capacity, Ram, Bandwidth, Moreoption))
     else:
         mycursor.execute("""
-        SELECT ProviderHostOption.ProverderOpID, ProviderHostOption.ProviderName, ProviderHostOption.Price, ProviderHostOption.Core, ProviderHostOption.Ram, ProviderHostOption.Bandwidth, ProviderHostOption.Capacity, AVG((AveragePoint + GetAppPoint)/2) as average
+        SELECT ProviderHostOption.ProverderOpID, ProviderHostOption.ProviderName, ProviderHostOption.Price, ProviderHostOption.Core, ProviderHostOption.RAM, ProviderHostOption.Bandwidth,ProviderHostOption.Capacity, AVG((AveragePoint + GetAppPoint)/2) as average
         FROM ProviderHostOption
         JOIN ProType ON ProType.ProviderName = ProviderHostOption.ProviderName
         JOIN MoreHostOption ON MoreHostOption.ProverderOpID = ProviderHostOption.ProverderOpID
-        WHERE Price <= %s AND Core >= %s And Capacity >= %s And Ram >= %s and Bandwidth >= %s 
+        WHERE Price <= %s And RAM >= %s And Bandwidth >= %s And Core >= %s And Capacity >= %s 
         GROUP BY ProviderHostOption.ProverderOpID, ProviderHostOption.ProviderName
         """, (Money, Core, Capacity, Ram, Bandwidth))
 
@@ -151,13 +151,14 @@ def print_top_five_host():
         price = row[2]
         CPUs = row[3]
         Rams = row[4]
-
         Bands = row[5]
         capacity = row[6]
         average = row[7]
         update_list.append((average, proverder_op_id, provider_name, price, CPUs, Rams, Bands, capacity ))
+        
     print("Top option and provider for you base on what you need:")
-    update_list.sort(reverse=True, key=lambda x: x[0])
+    update_list.sort(reverse=True, key=lambda x: x[0] if x[0] is not None else 0)
+
     top_five = update_list[:5]
     for avg, proverder_op_id, provider_name, price, CPUs, Rams, Bands, capacity  in top_five:
         print("Provider Name: {}, ProverderOpID: {}, Price: {}, CPU_core: {}, Ram: {}Gb, Bandwidth {}Gb, Capacity: {} ,Average: {}".format(provider_name, proverder_op_id, price, CPUs, Rams, Bands,capacity , avg))

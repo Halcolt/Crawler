@@ -1,0 +1,13 @@
+- Đưa ra 1 quy trình có hệ thống 
+- Đưa ra yêu cầu bài toán:
++ yêu cầu của bài toán 
++ khó khăn của vấn đề 
++ giải pháp của mình
++ nêu rõ công nghệ sử dụng
+
+đưa ra giải pháp của vấn đề ko hoàn chỉnh
+- đưa ra số lượng công việc hiện có
+
+Đưa ra thông tin cảnh báo dựa trên những tiêu chí trc 
+
+ 

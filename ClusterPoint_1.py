@@ -1,7 +1,6 @@
 import mysql.connector
 from sklearn.cluster import KMeans
 import numpy as np
-import sqlite3
 
 # Connect to the MySQL server
 mydb = mysql.connector.connect(
@@ -17,12 +16,14 @@ else:
 
 # Create a cursor object
 mycursor = mydb.cursor()
-#turn off safe mode
 
+#turn off safe mode
 mycursor.execute("SET SQL_SAFE_UPDATES = 0")
 mydb.commit()
+
 mycursor.execute("Update ProviderDriveOption SET GbPerPrice=ROUND(Price/Capacity, 4)")
 mydb.commit()
+
 #----------------------------------------------------------------------
 #ProviderHostOption
 #PricePoint
@@ -58,10 +59,6 @@ for i, (price, label) in enumerate(clustered_data):
         label = new_label
         clustered_data[i] = (price, label)
 
-# print the re-labeled data
-for element in clustered_data:
-    print(element, end='\n')
-
 # Iterate through the re-labeled data and update the "PricePoint" field
 for price, label in clustered_data:
     query = "UPDATE ProviderHostOption SET PricePoint=%s WHERE ROUND(Price, 4) = %s"
@@ -69,7 +66,6 @@ for price, label in clustered_data:
     values = (label, price[0])
     mycursor.execute(query, values)
     mydb.commit()
-print('\n')
 #----------------------------------------------------------------------
 #CPUPonit
 query = "SELECT Core FROM ProviderHostOption"
@@ -104,18 +100,13 @@ for i, (CPU, label) in enumerate(clustered_data):
         label = new_label
         clustered_data[i] = (CPU, label)
 
-# print the re-labeled data
-for element in clustered_data:
-    print(element, end='\n')
-
 # Iterate through the re-labeled data and update the "CPUPoint" field
 for CPU, label in clustered_data:
-    query = "UPDATE ProviderHostOption SET CPUPoint=%s WHERE Core = %s"
+    query = "UPDATE ProviderHostOption SET CorePoint=%s WHERE Core = %s"
     #need to convert into int
     values = (label, int(CPU[0]))
     mycursor.execute(query, values)
     mydb.commit()
-print('\n')
 #----------------------------------------------------------------------
 #RamPoint
 query = "SELECT Ram FROM ProviderHostOption"
@@ -150,10 +141,6 @@ for i, (Ram, label) in enumerate(clustered_data):
         label = new_label
         clustered_data[i] = (Ram, label)
 
-# print the re-labeled data
-for element in clustered_data:
-    print(element, end='\n')
-
 # Iterate through the re-labeled data and update the "RamPoint" field
 for Ram, label in clustered_data:
     query = "UPDATE ProviderHostOption SET RamPoint=%s WHERE Ram = %s"
@@ -161,7 +148,6 @@ for Ram, label in clustered_data:
     values = (label, int(Ram[0]))
     mycursor.execute(query, values)
     mydb.commit()
-print('\n')
 #----------------------------------------------------------------------
 #BandPoint
 query = "SELECT BandWidth FROM ProviderHostOption"
@@ -196,20 +182,15 @@ for i, (Band, label) in enumerate(clustered_data):
         label = new_label
         clustered_data[i] = (Band, label)
 
-# print the re-labeled data
-for element in clustered_data:
-    print(element, end='\n')
-
 # Iterate through the re-labeled data and update the "BandPoint" field
 for Band, label in clustered_data:
-    query = "UPDATE ProviderHostOption SET BandPoint=%s WHERE BandWidth = %s"
+    query = "UPDATE ProviderHostOption SET BandwidthPoint=%s WHERE Bandwidth = %s"
     #need to convert into int
     values = (label, int(Band[0]))
     mycursor.execute(query, values)
     mydb.commit()
-print('\n')
 
-mycursor.execute("UPDATE ProviderHostOption SET AveragePoint = (PricePoint + CPUPoint + RamPoint + BandPoint)/4")
+mycursor.execute("UPDATE ProviderHostOption SET AveragePoint = (PricePoint + CorePoint + RamPoint + BandwidthPoint)/4")
 mydb.commit()
 
 #---------------------------------
@@ -245,10 +226,6 @@ for i, (price, label) in enumerate(clustered_data):
     else:
         label = new_label
         clustered_data[i] = (price, label)
-
-# print the re-labeled data
-for element in clustered_data:
-    print(element, end='\n')
 
     # Iterate through the re-labeled data and update the "PricePoint" field
 for price, label in clustered_data:
@@ -292,10 +269,6 @@ for i, (people, label) in enumerate(clustered_data):
     else:
         label = new_label
         clustered_data[i] = (people, label)
-
-# print the re-labeled data
-for element in clustered_data:
-    print(element, end='\n')
 
 # Iterate through the re-labeled data and update the "peoplePoint" field
 for people, label in clustered_data:

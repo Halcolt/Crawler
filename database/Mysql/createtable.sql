@@ -1,4 +1,3 @@
-drop database crawler
 create database crawler
 use crawler
 
@@ -18,13 +17,12 @@ create table ProviderDriveOption(
 	Price float,	-- Price per month
 	Capacity int,	-- drive capacity int Gb form
 	GbPerPrice float,
-    PricePoint int,
-    PeoplePoint int,
+    GbPerPricePoint int,
+    MaxPeoplePoint int,
     AveragePoint float,
 	constraint PK_Drive_Op primary key (ProverderOpID),
 	constraint FK_Drive_Op foreign key (ProviderName) references ProType(ProviderName)
 );
-
 
 create table MoreDriveOption(
 	MoreOptID int PRIMARY KEY AUTO_INCREMENT,
@@ -45,9 +43,9 @@ create table ProviderHostOption(
 	Capacity int,	-- drive capacity int Gb form
 	Bandwidth int,
     PricePoint float,
-    CPUPoint int,
+    CorePoint int,
     RamPoint int,
-	Bandpoint int,
+	Bandwidthpoint int,
     AveragePoint float,
 	constraint PK_Host_Op primary key (ProverderOpID),
 	constraint FK_Host_Op foreign key (ProviderName) references ProType(ProviderName)
@@ -58,23 +56,12 @@ CREATE TABLE MoreHostOption(
   ProverderOpID int,
   MOption varchar(255),
   CONSTRAINT FK_Host_MoreOpt FOREIGN KEY (ProverderOpID) REFERENCES ProviderHostOption(ProverderOpID)
-);
+)
 
-select * from protype;
+select * from ProType
 select * from ProviderDriveOption
 select * from ProviderHostOption
-select * from MoreHostOption
 select * from MoreDriveOption
+select * from MoreHostOption
 
-UPDATE ProviderHostOption SET AveragePoint = (PricePoint + CPUPoint + RamPoint + BandPoint)/4
--- SELECT * FROM ProviderDriveOption WHERE GbPerPrice = 0.0465
-
-SET SQL_SAFE_UPDATES = 0;
-UPDATE ProviderDriveOption SET GbPerPrice = Price / Capacity;
-
-
-drop table MoreDriveOption
-drop table MoreHostOption
-drop table ProviderDriveOption
-drop table ProviderHostOption
-drop table Protype
+drop database crawler
