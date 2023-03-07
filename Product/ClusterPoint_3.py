@@ -2,12 +2,12 @@ import mysql.connector
 from sklearn.cluster import KMeans
 import numpy as np
 def connect_to_database():
-    # Connect to the MySQL server
-    print("Enter MySQL config \n")
-    host = input("Enter the MySQL host: ")
-    user = input("Enter the MySQL username: ")
-    password = input("Enter the MySQL password: ")
-    database = input("Enter the MySQL database name: ")
+    # Read MySQL config from config.txt file
+    with open("config.txt") as f:
+        host = f.readline().strip()
+        user = f.readline().strip()
+        password = f.readline().strip()
+        database = f.readline().strip()
 
     try:
         conn = mysql.connector.connect(
